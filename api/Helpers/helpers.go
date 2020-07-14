@@ -1,8 +1,8 @@
 package helper
 
 import (
-	modelUser "TODO/api/Models/User"
 	modelTodo "TODO/api/Models/Todo"
+	modelUser "TODO/api/Models/User"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -17,18 +17,19 @@ type claims struct {
 }
 
 // CreateToken fore creating token
-func CreateToken(_id string) (string, error) {
+func CreateToken(_id string) (string, int64, error) {
 
 	atClaims := jwt.MapClaims{}
 	atClaims["authorized"] = true
 	atClaims["user_id"] = _id
-	atClaims["exp"] = time.Now().Add(time.Second*15).Unix() * 1000
+	atClaims["exp"] = time.Now().Add(time.Minute*15).Unix() * 1000
+	expires := atClaims["exp"].(int64)
 	at := jwt.NewWithClaims(jwt.SigningMethodHS256, atClaims)
 	token, err := at.SignedString([]byte("my_secret_key"))
 	if err != nil {
-		return "", err
+		return "", expires, err
 	}
-	return token, nil
+	return token, expires, nil
 
 }
 
@@ -112,7 +113,6 @@ func ValidateTodoInput(todo modelTodo.Todo) string {
 		errMsg = "Please provide valid Name"
 		return errMsg
 	}
-
 
 	return ""
 }

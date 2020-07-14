@@ -82,9 +82,9 @@ func Register(c *gin.Context) {
 
 	userData.ID = bson.NewObjectId()
 
-	token, _ := helper.CreateToken(userData.ID.Hex())
+	token, expire, _ := helper.CreateToken(userData.ID.Hex())
 	userData.Token = token
-
+	userData.TokenExpiresAt = expire
 	// file, FileErr := c.FormFile("file")
 	// if file == nil {
 	// 	helper.RespondWithError(c, http.StatusBadRequest, CONSTANTS.FileMissing)
@@ -158,7 +158,8 @@ func Login(c *gin.Context) {
 		helper.RespondWithError(c, http.StatusBadRequest, CONSTANTS.IncorrectPassword)
 		return
 	}
-	token, _ := helper.CreateToken(userData.ID.Hex())
+	token, expire, _ := helper.CreateToken(userData.ID.Hex())
+	userData.TokenExpiresAt = expire
 	userData.Token = token
 	err = getCollection.UpdateId(bson.ObjectIdHex(userData.ID.Hex()), userData)
 	helper.RespondWithSuccess(c, http.StatusOK, CONSTANTS.LoggedInSuccess, userData)
