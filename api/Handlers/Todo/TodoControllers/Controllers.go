@@ -54,7 +54,7 @@ func CreateTodo(c *gin.Context) {
 // GetTodos to get all advertisments
 func GetTodos(c *gin.Context) {
 
-	// val := reflect.ValueOf(c.Keys["user_id"])
+	val := reflect.ValueOf(c.Keys["user_id"])
 
 	resp := []bson.M{}
 	mongoSession := configuration.ConnectDb(constants.Database)
@@ -64,9 +64,9 @@ func GetTodos(c *gin.Context) {
 	defer sessionCopy.Close()
 
 	getCollection := sessionCopy.DB(constants.Database).C("todo")
-	err := getCollection.Find(bson.M{}).All(&resp)
+	// err := getCollection.Find(bson.M{}).All(&resp)
 
-	// err := getCollection.Find(bson.M{"user": bson.ObjectIdHex(val.String())}).All(&resp)
+	err := getCollection.Find(bson.M{"user": bson.ObjectIdHex(val.String())}).All(&resp)
 
 	if err != nil {
 		helper.RespondWithError(c, http.StatusBadRequest, err.Error())
@@ -77,13 +77,35 @@ func GetTodos(c *gin.Context) {
 
 }
 
+// GetTodo by ID
+func GetTodo(c *gin.Context) {
+	todoID := c.Param("todoId")
+	_id := bson.ObjectIdHex(todoID)
+	resp := bson.M{}
+	mongoSession := configuration.ConnectDb(constants.Database)
+	defer mongoSession.Close()
+
+	sessionCopy := mongoSession.Copy()
+	defer sessionCopy.Close()
+
+	getCollection := sessionCopy.DB(constants.Database).C("todo")
+
+	err := getCollection.FindId(_id).One(&resp)
+
+	if err != nil {
+		helper.RespondWithError(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	helper.RespondWithSuccess(c, http.StatusOK, constants.ListFetchedSuccess, resp)
+
+}
+
 // UpdateTodo by ID
 func UpdateTodo(c *gin.Context) {
 	todoID := c.Param("todoId")
 	var Todo models.Todo
 	c.BindJSON(&Todo)
 	_id := bson.ObjectIdHex(todoID)
-	fmt.Println(Todo)
 	if Todo.Name == "" {
 		helper.RespondWithError(c, http.StatusBadRequest, "Please Provide valid name")
 		return

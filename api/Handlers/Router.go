@@ -17,7 +17,7 @@ func Router() *gin.Engine {
 	router.StaticFS("/static", http.Dir("./Static"))
 	router.Use(gin.Recovery())
 
-	router.Use(cors.Default())
+	router.Use(cors.AllowAll())
 
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(
@@ -28,25 +28,26 @@ func Router() *gin.Engine {
 		)
 	})
 
-	superGroup := router.Group("/api")
+	superGroup := router.Group("/api/")
 	{
 
-		userGroup := superGroup.Group("/user")
+		userGroup := superGroup.Group("/user/")
 		{
 
-			userGroup.POST("/register", userController.Register) // User Register
-			userGroup.POST("/login", userController.Login)       // User Login
+			userGroup.POST("register", userController.Register) // User Register
+			userGroup.POST("login", userController.Login)       // User Login
 		}
 
-		todoGroup := superGroup.Group("/todo")
+		todoGroup := superGroup.Group("/todo/")
 		{
 
 			todoGroup.Use(middleware.TokenAuthMiddleware())
 			{
-				todoGroup.GET("/getTodos", todoController.GetTodos)                //get TODOs
-				todoGroup.POST("/create", todoController.CreateTodo)               //create TODO
-				todoGroup.PATCH("/updateTodo/:todoId", todoController.UpdateTodo)  //get TODOs
-				todoGroup.DELETE("/deleteTodo/:todoId", todoController.DeleteTodo) //get TODOs
+				todoGroup.GET("getTodos", todoController.GetTodos)                //get TODOs
+				todoGroup.POST("create", todoController.CreateTodo)               //create TODO
+				todoGroup.GET("getTodo/:todoId", todoController.GetTodo)               //create TODO
+				todoGroup.PATCH("updateTodo/:todoId", todoController.UpdateTodo)  //get TODOs
+				todoGroup.DELETE("deleteTodo/:todoId", todoController.DeleteTodo) //get TODOs
 
 			}
 
