@@ -1,9 +1,9 @@
 package middleware
 
 import (
+	configuration "TODO/api/Configuration"
 	constants "TODO/api/Constant"
-	"coupanda/configuration"
-	"coupanda/models"
+	models "TODO/api/Models/User"
 	"fmt"
 
 	"github.com/dgrijalva/jwt-go"
@@ -53,7 +53,7 @@ func TokenAuthMiddleware() gin.HandlerFunc {
 			return []byte("my_secret_key"), nil
 		})
 
-		var userData models.UserSignup
+		var userData models.User
 		mongoSession := configuration.ConnectDb(constants.Database)
 		defer mongoSession.Close()
 
