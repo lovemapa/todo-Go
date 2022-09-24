@@ -1,0 +1,168 @@
+basePath: /
+definitions:
+  models.Todo:
+    properties:
+      date:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: boolean
+      user:
+        type: string
+    type: object
+  models.User:
+    properties:
+      ProfilePhoto:
+        type: string
+      date:
+        type: integer
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: string
+      lastName:
+        type: string
+      mobile:
+        type: string
+      password:
+        type: string
+      token:
+        type: string
+      tokenExpiresAt:
+        type: integer
+    required:
+    - email
+    - firstName
+    - lastName
+    - mobile
+    - password
+    type: object
+  models.UserLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      token:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Gin Swagger Example API
+  version: "1.0"
+paths:
+  /todo/create:
+    post:
+      consumes:
+      - application/json
+      description: Add a new Todo
+      parameters:
+      - description: Todo Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.Todo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Todo'
+      summary: Create Todo
+      tags:
+      - todo
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login for User
+      parameters:
+      - description: User Data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.UserLogin'
+      summary: Login
+      tags:
+      - user
+  /user/register:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Add a new User
+      parameters:
+      - in: formData
+        name: ProfilePhoto
+        type: string
+      - in: formData
+        name: date
+        type: integer
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: firstName
+        required: true
+        type: string
+      - in: formData
+        name: id
+        type: string
+      - in: formData
+        name: lastName
+        required: true
+        type: string
+      - in: formData
+        name: mobile
+        required: true
+        type: string
+      - in: formData
+        name: password
+        required: true
+        type: string
+      - in: formData
+        name: token
+        type: string
+      - in: formData
+        name: tokenExpiresAt
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Register User
+      tags:
+      - user
+schemes:
+- http
+swagger: "2.0"

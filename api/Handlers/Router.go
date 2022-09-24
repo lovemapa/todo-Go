@@ -6,17 +6,26 @@ import (
 	middleware "TODO/api/Middlewares"
 	"net/http"
 
+	docs "TODO/docs"
+
 	cors "github.com/rs/cors/wrapper/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"github.com/gin-gonic/gin"
 )
 
 //Router for all routes
+
 func Router() *gin.Engine {
 	router := gin.Default()
 	router.StaticFS("/static", http.Dir("./Static"))
 	router.Use(gin.Recovery())
-
+	// docs.SwaggerInfo.Title="Swaagger API"
+	docs.SwaggerInfo.Description="Testing Swagger APIs"
+	docs.SwaggerInfo.Version="1.0"
+	docs.SwaggerInfo.Host="localhost:8081"
+	docs.SwaggerInfo.BasePath = "/api/v1"
 	router.Use(cors.AllowAll())
 
 	router.GET("/", func(c *gin.Context) {
@@ -28,7 +37,9 @@ func Router() *gin.Engine {
 		)
 	})
 
-	superGroup := router.Group("/api/")
+
+
+	superGroup := router.Group("/api/v1/")
 	{
 
 		userGroup := superGroup.Group("/user/")
@@ -59,7 +70,7 @@ func Router() *gin.Engine {
 		}
 
 	}
-
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	return router
 
 }

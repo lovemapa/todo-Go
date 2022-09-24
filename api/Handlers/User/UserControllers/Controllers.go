@@ -15,7 +15,15 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-//Register advertisment
+//RegisterUser godoc
+// @Summary      Register User
+// @Description  Add a new User
+// @Tags         user
+// @Accept       mpfd
+// @Produce      json
+// @Param user formData models.User true "User Data"
+// @Success      200  {object}  models.User
+// @Router /user/register [post]
 func Register(c *gin.Context) {
 
 	var userData models.User
@@ -123,7 +131,15 @@ func Register(c *gin.Context) {
 
 }
 
-// Login for advertiser login
+//Login godoc
+// @Summary      Login
+// @Description  Login for User
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param user body models.UserLogin true "User Data"
+// @Success      200  {object}  models.UserLogin
+// @Router /user/login [post]
 func Login(c *gin.Context) {
 	var Login models.UserLogin
 	var userData models.User

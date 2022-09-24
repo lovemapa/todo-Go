@@ -15,7 +15,18 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// CreateTodo for TOOO create
+//CreateTodo godoc
+// @Summary      Create Todo
+// @Description  Add a new Todo
+// @Tags         todo
+// @Accept       json
+// @Produce      json
+// @Param user body models.Todo true "Todo Data"
+// @Success      200  {object}  models.Todo
+// @securityDefinitions.apiKey token
+// @in header
+// @name Authorization
+// @Router /todo/create [post]
 func CreateTodo(c *gin.Context) {
 
 	var Todo models.Todo
