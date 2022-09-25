@@ -16,10 +16,6 @@ const docTemplate = `{
             "url": "http://www.swagger.io/support",
             "email": "support@swagger.io"
         },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -27,6 +23,11 @@ const docTemplate = `{
     "paths": {
         "/todo/create": {
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Add a new Todo",
                 "consumes": [
                     "application/json"
@@ -41,7 +42,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Todo Data",
-                        "name": "user",
+                        "name": "todo",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -177,18 +178,13 @@ const docTemplate = `{
     "definitions": {
         "models.Todo": {
             "type": "object",
+            "required": [
+                "name",
+                "user"
+            ],
             "properties": {
-                "date": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
-                },
-                "status": {
-                    "type": "boolean"
                 },
                 "user": {
                     "type": "string"
@@ -255,16 +251,23 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "token",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3000",
+	Host:             "localhost:8081",
 	BasePath:         "/",
 	Schemes:          []string{"http"},
-	Title:            "Gin Swagger Example API",
+	Title:            "TODO APIs",
 	Description:      "This is a sample server server.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

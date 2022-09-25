@@ -5,24 +5,25 @@
     "swagger": "2.0",
     "info": {
         "description": "This is a sample server server.",
-        "title": "Gin Swagger Example API",
+        "title": "TODO APIs",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
             "url": "http://www.swagger.io/support",
             "email": "support@swagger.io"
         },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
         "version": "1.0"
     },
-    "host": "localhost:3000",
+    "host": "localhost:8081",
     "basePath": "/",
     "paths": {
         "/todo/create": {
             "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
                 "description": "Add a new Todo",
                 "consumes": [
                     "application/json"
@@ -37,7 +38,7 @@
                 "parameters": [
                     {
                         "description": "Todo Data",
-                        "name": "user",
+                        "name": "todo",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -173,18 +174,13 @@
     "definitions": {
         "models.Todo": {
             "type": "object",
+            "required": [
+                "name",
+                "user"
+            ],
             "properties": {
-                "date": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
-                },
-                "status": {
-                    "type": "boolean"
                 },
                 "user": {
                     "type": "string"
@@ -250,6 +246,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "token",
+            "in": "header"
         }
     }
 }

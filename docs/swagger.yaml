@@ -2,16 +2,13 @@ basePath: /
 definitions:
   models.Todo:
     properties:
-      date:
-        type: string
-      id:
-        type: string
       name:
         type: string
-      status:
-        type: boolean
       user:
         type: string
+    required:
+    - name
+    - user
     type: object
   models.User:
     properties:
@@ -54,18 +51,15 @@ definitions:
     - email
     - password
     type: object
-host: localhost:3000
+host: localhost:8081
 info:
   contact:
     email: support@swagger.io
     name: API Support
     url: http://www.swagger.io/support
   description: This is a sample server server.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Gin Swagger Example API
+  title: TODO APIs
   version: "1.0"
 paths:
   /todo/create:
@@ -76,7 +70,7 @@ paths:
       parameters:
       - description: Todo Data
         in: body
-        name: user
+        name: todo
         required: true
         schema:
           $ref: '#/definitions/models.Todo'
@@ -87,6 +81,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Todo'
+      security:
+      - JWT: []
       summary: Create Todo
       tags:
       - todo
@@ -165,4 +161,9 @@ paths:
       - user
 schemes:
 - http
+securityDefinitions:
+  JWT:
+    in: header
+    name: token
+    type: apiKey
 swagger: "2.0"

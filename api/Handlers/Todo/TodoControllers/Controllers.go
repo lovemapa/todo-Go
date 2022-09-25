@@ -21,28 +21,35 @@ import (
 // @Tags         todo
 // @Accept       json
 // @Produce      json
-// @Param user body models.Todo true "Todo Data"
+// @Param todo body models.Todo true "Todo Data"
 // @Success      200  {object}  models.Todo
 // @securityDefinitions.apiKey token
 // @in header
 // @name Authorization
+// @Security JWT
 // @Router /todo/create [post]
 func CreateTodo(c *gin.Context) {
 
 	var Todo models.Todo
 	val := reflect.ValueOf(c.Keys["user_id"])
 
-	c.BindJSON(&Todo)
+	Todo.ID = bson.NewObjectId()
+	Todo.User = bson.ObjectIdHex(val.String())
+	Todo.Date = time.Now()
+	Todo.Status = false
+	
+	jsonErr:=c.BindJSON(&Todo)
+
+	if jsonErr!=nil{
+		helper.RespondWithError(c, http.StatusBadRequest,jsonErr)
+		return
+	 }
 
 	if Todo.Name == "" {
 		helper.RespondWithError(c, http.StatusBadRequest, "Please Provide valid name")
 		return
 	}
 
-	Todo.ID = bson.NewObjectId()
-	Todo.User = bson.ObjectIdHex(val.String())
-	Todo.Date = time.Now()
-	Todo.Status = false
 
 	mongoSession := configuration.ConnectDb(constants.Database)
 	defer mongoSession.Close()
