@@ -69,7 +69,16 @@ func CreateTodo(c *gin.Context) {
 
 }
 
-// GetTodos to get all advertisments
+//GetAllTodos godoc
+// @Summary      Get Todos
+// @Description  Get All TODOs
+// @Tags         todo
+// @Produce      json
+// @securityDefinitions.apiKey token
+// @in header
+// @name Authorization
+// @Security JWT
+// @Router /todo/getTodos [get]
 func GetTodos(c *gin.Context) {
 
 	val := reflect.ValueOf(c.Keys["user_id"])
@@ -95,7 +104,18 @@ func GetTodos(c *gin.Context) {
 
 }
 
-// GetTodo by ID
+//GetTodoByID godoc
+// @Summary      Get Todo
+// @Description  Get a TODO by ID
+// @Tags         todo
+// @Produce      json
+// @Param        todoId   path      string  true  "Todo ID"
+// // @Success      200  {object}  models.Todo
+// @securityDefinitions.apiKey token
+// @in header
+// @name Authorization
+// @Security JWT
+// @Router /todo/getTodo/{todoId} [get]
 func GetTodo(c *gin.Context) {
 	todoID := c.Param("todoId")
 	_id := bson.ObjectIdHex(todoID)
@@ -118,11 +138,30 @@ func GetTodo(c *gin.Context) {
 
 }
 
-// UpdateTodo by ID
+
+//UpdateTodoByID godoc
+// @Summary      Update Todo
+// @Description  Update TODO by ID
+// @Tags         todo
+// @Produce      json
+// @Param        todoId   path      string  true  "Todo ID"
+// @Param todo body models.Todo true "Todo Data"
+// @securityDefinitions.apiKey token
+// @in header
+// @name Authorization
+// @Security JWT
+// @Router /todo/updateTodo/{todoId} [patch]
 func UpdateTodo(c *gin.Context) {
 	todoID := c.Param("todoId")
 	var Todo models.Todo
-	c.BindJSON(&Todo)
+
+	jsonErr:=c.BindJSON(&Todo)
+	if jsonErr!=nil{
+		fmt.Print(jsonErr)
+		helper.RespondWithError(c, http.StatusBadRequest,jsonErr)
+		return
+	 }
+
 	_id := bson.ObjectIdHex(todoID)
 	if Todo.Name == "" {
 		helper.RespondWithError(c, http.StatusBadRequest, "Please Provide valid name")
@@ -155,7 +194,18 @@ func UpdateTodo(c *gin.Context) {
 	helper.RespondWithSuccess(c, http.StatusOK, constants.ListFetchedSuccess, resp)
 }
 
-// DeleteTodo by ID
+
+//DeleteTodoByID godoc
+// @Summary      Delete Todo
+// @Description  Delete TODO by ID
+// @Tags         todo
+// @Produce      json
+// @Param        todoId   path      string  true  "Todo ID"
+// @securityDefinitions.apiKey token
+// @in header
+// @name Authorization
+// @Security JWT
+// @Router /todo/deleteTodo/{todoId} [delete]
 func DeleteTodo(c *gin.Context) {
 	todoID := c.Param("todoId")
 	_id := bson.ObjectIdHex(todoID)

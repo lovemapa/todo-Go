@@ -8,7 +8,6 @@ definitions:
         type: string
     required:
     - name
-    - user
     type: object
   models.User:
     properties:
@@ -84,6 +83,74 @@ paths:
       security:
       - JWT: []
       summary: Create Todo
+      tags:
+      - todo
+  /todo/deleteTodo/{todoId}:
+    delete:
+      description: Delete TODO by ID
+      parameters:
+      - description: Todo ID
+        in: path
+        name: todoId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - JWT: []
+      summary: Delete Todo
+      tags:
+      - todo
+  /todo/getTodo/{todoId}:
+    get:
+      description: Get a TODO by ID
+      parameters:
+      - description: Todo ID
+        in: path
+        name: todoId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - JWT: []
+      summary: Get Todo
+      tags:
+      - todo
+  /todo/getTodos:
+    get:
+      description: Get All TODOs
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - JWT: []
+      summary: Get Todos
+      tags:
+      - todo
+  /todo/updateTodo/{todoId}:
+    patch:
+      description: Update TODO by ID
+      parameters:
+      - description: Todo ID
+        in: path
+        name: todoId
+        required: true
+        type: string
+      - description: Todo Data
+        in: body
+        name: todo
+        required: true
+        schema:
+          $ref: '#/definitions/models.Todo'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - JWT: []
+      summary: Update Todo
       tags:
       - todo
   /user/login:
