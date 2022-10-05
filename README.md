@@ -11,3 +11,6 @@ go build
 
 ## Run executable
 .\TODO.exe
+
+## use below enviornment variable in .env file
+PORT=8081
